@@ -24,35 +24,38 @@ void sectorArrayReset(Sector* dataArray){
   }
 }
 
+// takes lidar reading and updates the sector it belongs to using the data 
 void addDataToSector(float angle,float distance,Sector *dataArray){
   
-  int currentDataArrayIndex = (int)(angle/(360/NUMBER_OF_SECTORS)) % NUMBER_OF_SECTORS;
+  int currentDataArrayIndex = (int)(angle/(360/NUMBER_OF_SECTORS)) % NUMBER_OF_SECTORS; // find out which sector the data belongs in based on its angle
   dataArray[currentDataArrayIndex].samples++;
   dataArray[currentDataArrayIndex].sum += distance;
   
-  if(distance != 0 && distance < dataArray[currentDataArrayIndex].minVal) {
+  if(distance != 0 && distance < dataArray[currentDataArrayIndex].minVal) {  // if distance is less than current minVal make it the minVal
     dataArray[currentDataArrayIndex].minVal = distance;
   } 
-  
+ 
 }
 
 // Calculates average for a sector and store it in the sector
 void findSectorAvg(Sector * s){
-  if(s->samples > 0){
+  if(s->samples > 0){                    // make sure we don't divide by zero 
     s->avgDistance = s->sum/s->samples; 
   } 
 }
 
+// Calculates average for all the sectors in the data array 
 void sectorArrayAvg(Sector* dataArray){
   for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
     findSectorAvg(&dataArray[i]);
   }  
 }
 
+// Prints information from the dataArray to console
 void sectorArrayDebug(Sector * dataArray){
   for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
     Serial.print(dataArray[i].minVal);
-    if(i != NUMBER_OF_SECTORS - 1)
+    if(i != NUMBER_OF_SECTORS - 1)                 //print a new line instead of ',' after last sector
       Serial.print(",");
     else
       Serial.println();  

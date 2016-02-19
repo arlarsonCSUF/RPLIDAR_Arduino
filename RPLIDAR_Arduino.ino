@@ -57,7 +57,7 @@ RPLidar lidar;
 
 void setup() {
     
-    //  Bind the RPLIDAR driver to the arduino hardware serial
+    //  In this section we bind the RPLIDAR driver to the arduino hardware serial
     
     //  When we use the teensy we are able to use one of the serial ports to talk with the RPLIDAR
     //  and another for debug. Serial2 <-> RPLIDAR, Serial1 <-> debug console
@@ -78,7 +78,7 @@ void setup() {
     
 }
 
-Sector dataArray[NUMBER_OF_SECTORS];
+Sector dataArray[NUMBER_OF_SECTORS];  //this is our main data array, it is an array of Sectors, see Sector.h for info on what a sector is
 
 void loop() {
     
@@ -87,7 +87,7 @@ void loop() {
         float distance = lidar.getCurrentPoint().distance; //distance value in mm unit
         float angle    = lidar.getCurrentPoint().angle; //anglue value in degree
         bool  startBit = lidar.getCurrentPoint().startBit; //whether this point is belong to a new scan
-        byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement
+        byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement, this is proportional to amount of reflected light 
         
         if(startBit){
           
