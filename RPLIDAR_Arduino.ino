@@ -42,13 +42,6 @@
 #include <RPLidar.h>
 #include "Sector.h"
 
-int freeRam () 
-{
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
-}
-
 // Uncomment to select which microcontroller you are using
 #define TEENSY_LC
 //#define UNO
@@ -56,16 +49,11 @@ int freeRam ()
 //Enable debug console, only works on TEENSY
 #define DEBUG
 
-//The Number of data sectors each sector is 360 deg/# of sectors
-#define NUMBER_OF_SECTORS 12
-
 // You need to create an driver instance
 RPLidar lidar;
 
 #define RPLIDAR_MOTOR 3 // The PWM pin for control the speed of RPLIDAR's motor.
 // This pin should connected with the RPLIDAR's MOTOCTRL signal
-
-
 
 void setup() {
     
@@ -74,15 +62,15 @@ void setup() {
     //  When we use the teensy we are able to use one of the serial ports to talk with the RPLIDAR
     //  and another for debug. Serial2 <-> RPLIDAR, Serial1 <-> debug console
     #ifdef TEENSY_LC
-    lidar.begin(Serial2);
-    Serial.begin(115200);
+      lidar.begin(Serial2);
+      Serial.begin(115200);
     #endif
     
     // The UNO only has one serial port which needs to be used to talk with the RPLIDAR
     // Because of this we are unable to use a debug console
     #ifdef UNO
-    #undef DEBUG
-    lidar.begin(Serial);
+      #undef DEBUG
+      lidar.begin(Serial);
     #endif
     
     // set pin modes
@@ -90,9 +78,6 @@ void setup() {
     
 }
 
-
-uint16_t samples = 0;
-uint32_t distanceSum = 0;
 Sector dataArray[NUMBER_OF_SECTORS];
 
 void loop() {
@@ -105,42 +90,22 @@ void loop() {
         byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement
         
         if(startBit){
-          uint32_t uS_Start = micros();
-          // At the start of a new revolution we want to calculate the avgDistance for each sector
-          for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
-            if(dataArray[i].samples > 0){
-              dataArray[i].avgDistance = dataArray[i].sum/dataArray[i].samples;
-            }
-          }
           
-          //print debug
+          // At the start of a new revolution we want to calculate the avgDistance for each sector
+          sectorArrayAvg(dataArray);
+          
+          //only print debug if it is enabled
           #ifdef DEBUG
-            for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
-              Serial.print(dataArray[i].minVal);
-              if(i != NUMBER_OF_SECTORS - 1)
-                Serial.print(",");
-              else
-                Serial.println();  
-            }
+            sectorArrayDebug(dataArray);
           #endif
           
           // After calculating avgDistance we want to reset/zero out all the sectors  
-          for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
-            sectorReset(&dataArray[i]);
-          }   
-          Serial.println(micros()-uS_Start);  
-        }
-        
-        int currentDataArrayIndex = (int)(angle/(360/NUMBER_OF_SECTORS)) % NUMBER_OF_SECTORS;
-        dataArray[currentDataArrayIndex].samples++;
-        dataArray[currentDataArrayIndex].sum += distance;
-        if(distance != 0 && distance < dataArray[currentDataArrayIndex].minVal){
-          dataArray[currentDataArrayIndex].minVal = distance;
+          sectorArrayReset(dataArray);
+           
         }
         
         //perform data processing here...
-        
-        
+        addDataToSector(angle,distance,dataArray);  
         
     }
     else {
@@ -157,9 +122,8 @@ void loop() {
             // start motor rotating at max allowed speed
             analogWrite(RPLIDAR_MOTOR, 255);
             delay(1000);
-            
-        }
-        
+          
+        } 
         
     }  
  
