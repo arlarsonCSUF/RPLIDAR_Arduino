@@ -1,100 +1,160 @@
 /*
- * RoboPeak RPLIDAR Arduino Example
- * This example shows the easy and common way to fetch data from an RPLIDAR
- * 
- * You may freely add your application code based on this template
- *
- * USAGE:
- * ---------------------------------
- * 1. Download this sketch code to your Arduino board
- * 2. Connect the RPLIDAR's serial port (RX/TX/GND) to your Arduino board (Pin 0 and Pin1)
- * 3. Connect the RPLIDAR's motor ctrl pin to the Arduino board pin 3 
- */
- 
-/* 
- * Copyright (c) 2014, RoboPeak 
- * All rights reserved.
- * RoboPeak.com
- *
- * Redistribution and use in source and binary forms, with or without modification, 
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, 
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY 
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
- 
+* RoboPeak RPLIDAR Arduino Example
+* This example shows the easy and common way to fetch data from an RPLIDAR
+*
+* You may freely add your application code based on this template
+*
+* USAGE:
+* ---------------------------------
+* 1. Download this sketch code to your Arduino board
+* 2. Connect the RPLIDAR's serial port (RX/TX/GND) to your Arduino board (Pin 0 and Pin1)
+* 3. Connect the RPLIDAR's motor ctrl pin to the Arduino board pin 3
+*/
+
+/*
+* Copyright (c) 2014, RoboPeak
+* All rights reserved.
+* RoboPeak.com
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+* SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+* OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+* TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+*/
+
 // This sketch code is based on the RPLIDAR driver library provided by RoboPeak
 #include <RPLidar.h>
+#include "Sector.h"
 
-// You need to create an driver instance 
+// Uncomment to select which microcontroller you are using
+#define TEENSY_LC
+//#define UNO
+
+//Enable debug console, only works on TEENSY
+#define DEBUG
+
+//The Number of data sectors each sector is 360 deg/# of sectors
+#define NUMBER_OF_SECTORS 12
+
+// You need to create an driver instance
 RPLidar lidar;
 
 #define RPLIDAR_MOTOR 3 // The PWM pin for control the speed of RPLIDAR's motor.
-                        // This pin should connected with the RPLIDAR's MOTOCTRL signal 
-uint32_t millisPrev = 0;
-uint16_t samples = 0;
-uint32_t distanceSum = 0;
+// This pin should connected with the RPLIDAR's MOTOCTRL signal
+
+
 
 void setup() {
-  // bind the RPLIDAR driver to the arduino hardware serial
-  lidar.begin(Serial2);
-  Serial.begin(57600);
-  
-  // set pin modes
-  pinMode(RPLIDAR_MOTOR, OUTPUT);
+    
+    //  Bind the RPLIDAR driver to the arduino hardware serial
+    
+    //  When we use the teensy we are able to use one of the serial ports to talk with the RPLIDAR
+    //  and another for debug. Serial2 <-> RPLIDAR, Serial1 <-> debug console
+    #ifdef TEENSY_LC
+    lidar.begin(Serial2);
+    Serial.begin(57600);
+    #endif
+    
+    // The UNO only has one serial port which needs to be used to talk with the RPLIDAR
+    // Because of this we are unable to use a debug console
+    #ifdef UNO
+    #undef DEBUG
+    lidar.begin(Serial);
+    #endif
+    
+    // set pin modes
+    pinMode(RPLIDAR_MOTOR, OUTPUT);
+    
 }
 
+
+uint16_t samples = 0;
+uint32_t distanceSum = 0;
+Sector dataArray[NUMBER_OF_SECTORS];
+
 void loop() {
-  if (IS_OK(lidar.waitPoint())) {
-    float distance = lidar.getCurrentPoint().distance; //distance value in mm unit
-    float angle    = lidar.getCurrentPoint().angle; //anglue value in degree
-    bool  startBit = lidar.getCurrentPoint().startBit; //whether this point is belong to a new scan
-    byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement   
     
-    if(startBit){
-      samples = 0;
-      distanceSum = 0;
+    if (IS_OK(lidar.waitPoint())) {
+        
+        float distance = lidar.getCurrentPoint().distance; //distance value in mm unit
+        float angle    = lidar.getCurrentPoint().angle; //anglue value in degree
+        bool  startBit = lidar.getCurrentPoint().startBit; //whether this point is belong to a new scan
+        byte  quality  = lidar.getCurrentPoint().quality; //quality of the current measurement
+        
+        if(startBit){
+          
+          // At the start of a new revolution we want to calculate the avgDistance for each sector
+          for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
+            if(dataArray[i].samples > 0)
+              dataArray[i].avgDistance = ((float)dataArray[i].sum)/dataArray[i].samples;
+          }
+          
+          //print debug
+          #ifdef DEBUG
+            for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
+              Serial.print(i);
+              Serial.print(":");
+              Serial.println(dataArray[i].avgDistance);
+                
+            }
+          #endif
+          
+          // After calculating avgDistance we want to reset/zero out all the sectors  
+          for(uint8_t i = 0; i < NUMBER_OF_SECTORS; i++){
+            sectorReset(&dataArray[i]);
+            
+          }   
+          
+        }
+        
+        int currentDataArrayIndex = floor(angle/(360/NUMBER_OF_SECTORS));
+        dataArray[currentDataArrayIndex].samples++;
+        dataArray[currentDataArrayIndex].sum += distance;
+        
+        //perform data processing here...
+        
+        
+        
     }
-    
-    if(angle >= 0 && angle <= 45 && distance > 0){
-      samples++;
-      distanceSum += distance;  
-    }
-    
-    if(samples > 0)
-      Serial.println(((float)distanceSum/samples)/1000);
-    
-    
-    //perform data processing here... 
-    
-    
-  } else {
-    analogWrite(RPLIDAR_MOTOR, 0); //stop the rplidar motor
-    
-    // try to detect RPLIDAR... 
-    rplidar_response_device_info_t info;
-    if (IS_OK(lidar.getDeviceInfo(info, 100))) {
-       // detected...
-       lidar.startScan();
-       
-       // start motor rotating at max allowed speed
-       analogWrite(RPLIDAR_MOTOR, 255);
-       delay(1000);
-    }
-  }
+    else {
+        
+        analogWrite(RPLIDAR_MOTOR, 0); //stop the rplidar motor
+        
+        // try to detect RPLIDAR...
+        rplidar_response_device_info_t info;
+        if (IS_OK(lidar.getDeviceInfo(info, 100))) {
+            
+            // detected...
+            lidar.startScan();
+            
+            // start motor rotating at max allowed speed
+            analogWrite(RPLIDAR_MOTOR, 255);
+            delay(1000);
+            
+        }
+        
+        
+    }  
+ 
 }
+
+
+
+   
+
