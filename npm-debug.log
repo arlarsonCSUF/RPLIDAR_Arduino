@@ -1,0 +1,179 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', '-g', 'how2' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 verbose cache add [ 'how2', null ]
+5 verbose cache add name=undefined spec="how2" args=["how2",null]
+6 verbose parsed url { protocol: null,
+6 verbose parsed url   slashes: null,
+6 verbose parsed url   auth: null,
+6 verbose parsed url   host: null,
+6 verbose parsed url   port: null,
+6 verbose parsed url   hostname: null,
+6 verbose parsed url   hash: null,
+6 verbose parsed url   search: null,
+6 verbose parsed url   query: null,
+6 verbose parsed url   pathname: 'how2',
+6 verbose parsed url   path: 'how2',
+6 verbose parsed url   href: 'how2' }
+7 silly lockFile a4e35e15-how2 how2
+8 verbose lock how2 /Users/alexlarson/.npm/a4e35e15-how2.lock
+9 silly lockFile a4e35e15-how2 how2
+10 silly lockFile a4e35e15-how2 how2
+11 verbose addNamed [ 'how2', '' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile b4fb838e-how2 how2@
+14 verbose lock how2@ /Users/alexlarson/.npm/b4fb838e-how2.lock
+15 silly addNameRange { name: 'how2', range: '*', hasData: false }
+16 verbose request where is /how2
+17 verbose request registry https://registry.npmjs.org/
+18 verbose request id 315196e48b2ff7cb
+19 verbose url raw /how2
+20 verbose url resolving [ 'https://registry.npmjs.org/', './how2' ]
+21 verbose url resolved https://registry.npmjs.org/how2
+22 verbose request where is https://registry.npmjs.org/how2
+23 info trying registry request attempt 1 at 22:55:57
+24 http GET https://registry.npmjs.org/how2
+25 http 200 https://registry.npmjs.org/how2
+26 silly registry.get cb [ 200,
+26 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+26 silly registry.get     etag: '"3C7GF58KYNS9JK18PRXR29LS2"',
+26 silly registry.get     'content-type': 'application/json',
+26 silly registry.get     'cache-control': 'max-age=300',
+26 silly registry.get     'content-length': '11315',
+26 silly registry.get     'accept-ranges': 'bytes',
+26 silly registry.get     date: 'Tue, 23 Feb 2016 06:55:58 GMT',
+26 silly registry.get     via: '1.1 varnish',
+26 silly registry.get     age: '135',
+26 silly registry.get     connection: 'keep-alive',
+26 silly registry.get     'x-served-by': 'cache-sjc3123-SJC',
+26 silly registry.get     'x-cache': 'HIT',
+26 silly registry.get     'x-cache-hits': '1',
+26 silly registry.get     'x-timer': 'S1456210558.245937,VS0,VE0',
+26 silly registry.get     vary: 'Accept' } ]
+27 silly addNameRange number 2 { name: 'how2', range: '*', hasData: true }
+28 silly addNameRange versions [ 'how2', [ '1.0.0', '1.0.1', '1.0.2', '1.0.4', '1.0.5' ] ]
+29 verbose addNamed [ 'how2', '1.0.5' ]
+30 verbose addNamed [ '1.0.5', '1.0.5' ]
+31 silly lockFile 88bd15c8-how2-1-0-5 how2@1.0.5
+32 verbose lock how2@1.0.5 /Users/alexlarson/.npm/88bd15c8-how2-1-0-5.lock
+33 silly lockFile 7a67b45c-ry-npmjs-org-how2-how2-1-0-5-tgz https://registry.npmjs.org/how2/-/how2-1.0.5.tgz
+34 verbose lock https://registry.npmjs.org/how2/-/how2-1.0.5.tgz /Users/alexlarson/.npm/7a67b45c-ry-npmjs-org-how2-how2-1-0-5-tgz.lock
+35 verbose addRemoteTarball [ 'https://registry.npmjs.org/how2/-/how2-1.0.5.tgz',
+35 verbose addRemoteTarball   'b190c95b2a79ccb4dcfa6e14256e67f064a02ce3' ]
+36 info retry fetch attempt 1 at 22:55:58
+37 verbose fetch to= /var/folders/65/zjm77mjn6ds0yf63h9z4jdgh0000gn/T/npm-7601-iEJjnPTC/registry.npmjs.org/how2/-/how2-1.0.5.tgz
+38 http GET https://registry.npmjs.org/how2/-/how2-1.0.5.tgz
+39 http 200 https://registry.npmjs.org/how2/-/how2-1.0.5.tgz
+40 silly lockFile 7a67b45c-ry-npmjs-org-how2-how2-1-0-5-tgz https://registry.npmjs.org/how2/-/how2-1.0.5.tgz
+41 silly lockFile 7a67b45c-ry-npmjs-org-how2-how2-1-0-5-tgz https://registry.npmjs.org/how2/-/how2-1.0.5.tgz
+42 silly lockFile 88bd15c8-how2-1-0-5 how2@1.0.5
+43 silly lockFile 88bd15c8-how2-1-0-5 how2@1.0.5
+44 silly lockFile b4fb838e-how2 how2@
+45 silly lockFile b4fb838e-how2 how2@
+46 silly resolved [ { name: 'how2',
+46 silly resolved     author:
+46 silly resolved      { name: 'Claudio Santini',
+46 silly resolved        email: 'hireclaudio@gmail.com',
+46 silly resolved        url: 'https://www.linkedin.com/in/santinic' },
+46 silly resolved     version: '1.0.5',
+46 silly resolved     description: 'Uses Google and Stackoverflow to find how to do things on a Unix commmand line',
+46 silly resolved     license: 'NON-MILITARY SOCIALIST LICENCE VERSION 1',
+46 silly resolved     repository:
+46 silly resolved      { type: 'git',
+46 silly resolved        url: 'git+ssh://git@github.com/santinic/how2.git' },
+46 silly resolved     keywords:
+46 silly resolved      [ 'how2',
+46 silly resolved        'howto',
+46 silly resolved        'man',
+46 silly resolved        'google',
+46 silly resolved        'stackoverflow',
+46 silly resolved        'stack overflow',
+46 silly resolved        'stackexchange',
+46 silly resolved        'stack exchange' ],
+46 silly resolved     tags:
+46 silly resolved      [ 'how2',
+46 silly resolved        'howto',
+46 silly resolved        'man',
+46 silly resolved        'google',
+46 silly resolved        'stackoverflow',
+46 silly resolved        'stack overflow',
+46 silly resolved        'stackexchange',
+46 silly resolved        'stack exchange' ],
+46 silly resolved     homepage: 'https://github.com/santinic/how2',
+46 silly resolved     preferGlobal: true,
+46 silly resolved     main: './index.js',
+46 silly resolved     bin: { how2: './bin/how2' },
+46 silly resolved     scripts: { start: './bin/how2 concatenate two files' },
+46 silly resolved     dependencies:
+46 silly resolved      { blessed: '^0.1.81',
+46 silly resolved        colors: '^1.1.2',
+46 silly resolved        devnull: '0.0.12',
+46 silly resolved        ent: '^2.2.0',
+46 silly resolved        google: '^1.4.0',
+46 silly resolved        keypress: '^0.2.1',
+46 silly resolved        lodash: '^4.3.0',
+46 silly resolved        marked: '^0.3.3',
+46 silly resolved        'marked-terminal': '^1.6.1',
+46 silly resolved        nconf: '^0.8.4',
+46 silly resolved        'npm-latest': '^1.0.1',
+46 silly resolved        request: '^2.69.0',
+46 silly resolved        scanf: '^0.7.0',
+46 silly resolved        utile: '^0.3.0',
+46 silly resolved        yargs: '^4.1.0' },
+46 silly resolved     devDependencies: { mocha: '^2.4.5' },
+46 silly resolved     gitHead: '22fecdd67bdc36b0b7862ceb1876e0967b21d1a0',
+46 silly resolved     bugs: { url: 'https://github.com/santinic/how2/issues' },
+46 silly resolved     _id: 'how2@1.0.5',
+46 silly resolved     _shasum: 'b190c95b2a79ccb4dcfa6e14256e67f064a02ce3',
+46 silly resolved     _from: 'how2@',
+46 silly resolved     _npmVersion: '2.14.12',
+46 silly resolved     _nodeVersion: '4.3.1',
+46 silly resolved     _npmUser: { name: 'santinic', email: 'hireclaudio@gmail.com' },
+46 silly resolved     dist:
+46 silly resolved      { shasum: 'b190c95b2a79ccb4dcfa6e14256e67f064a02ce3',
+46 silly resolved        tarball: 'http://registry.npmjs.org/how2/-/how2-1.0.5.tgz' },
+46 silly resolved     maintainers: [ [Object] ],
+46 silly resolved     _npmOperationalInternal:
+46 silly resolved      { host: 'packages-6-west.internal.npmjs.com',
+46 silly resolved        tmp: 'tmp/how2-1.0.5.tgz_1456162538870_0.6309228278696537' },
+46 silly resolved     directories: {},
+46 silly resolved     _resolved: 'https://registry.npmjs.org/how2/-/how2-1.0.5.tgz' } ]
+47 info install how2@1.0.5 into /usr/local/lib
+48 info installOne how2@1.0.5
+49 verbose lib/node_modules/how2 unbuild
+50 verbose tar unpack /Users/alexlarson/.npm/how2/1.0.5/package.tgz
+51 silly lockFile aa42ae01--usr-local-lib-node-modules-how2 tar:///usr/local/lib/node_modules/how2
+52 verbose lock tar:///usr/local/lib/node_modules/how2 /Users/alexlarson/.npm/aa42ae01--usr-local-lib-node-modules-how2.lock
+53 silly lockFile 5d11775a-arson-npm-how2-1-0-5-package-tgz tar:///Users/alexlarson/.npm/how2/1.0.5/package.tgz
+54 verbose lock tar:///Users/alexlarson/.npm/how2/1.0.5/package.tgz /Users/alexlarson/.npm/5d11775a-arson-npm-how2-1-0-5-package-tgz.lock
+55 silly gunzTarPerm modes [ '755', '644' ]
+56 error Error: EACCES, mkdir '/usr/local/lib/node_modules/how2'
+56 error  { [Error: EACCES, mkdir '/usr/local/lib/node_modules/how2']
+56 error   errno: 3,
+56 error   code: 'EACCES',
+56 error   path: '/usr/local/lib/node_modules/how2',
+56 error   fstream_type: 'Directory',
+56 error   fstream_path: '/usr/local/lib/node_modules/how2',
+56 error   fstream_class: 'DirWriter',
+56 error   fstream_stack:
+56 error    [ '/usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23',
+56 error      '/usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53',
+56 error      'Object.oncomplete (fs.js:107:15)' ] }
+57 error Please try running this command again as root/Administrator.
+58 error System Darwin 15.0.0
+59 error command "node" "/usr/local/bin/npm" "install" "-g" "how2"
+60 error cwd /Users/alexlarson/Documents/SUAVE/RPLIDAR_Arduino
+61 error node -v v0.10.32
+62 error npm -v 1.4.28
+63 error path /usr/local/lib/node_modules/how2
+64 error fstream_path /usr/local/lib/node_modules/how2
+65 error fstream_type Directory
+66 error fstream_class DirWriter
+67 error code EACCES
+68 error errno 3
+69 error stack Error: EACCES, mkdir '/usr/local/lib/node_modules/how2'
+70 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23
+70 error fstream_stack /usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53
+70 error fstream_stack Object.oncomplete (fs.js:107:15)
+71 verbose exit [ 3, true ]
