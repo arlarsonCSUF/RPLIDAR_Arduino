@@ -35,8 +35,8 @@
 
 struct RPLidarMeasurement
 {
-    float distance;
-    float angle;
+    uint16_t distance;
+    uint16_t angle;
     uint8_t quality;
     bool  startBit;
 };
